@@ -45,7 +45,7 @@ func AddHandler(cfg Config) error {
 	defer file.Close()
 
 	cfg.ID = uuid.NewString()
-	data, err := json.MarshalIndent(cfg, "", " ")
+	data, err := json.MarshalIndent(cfg, "", "    ")
 	if err != nil {
 		return err
 	}

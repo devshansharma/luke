@@ -45,7 +45,7 @@ func AddHandler(c Collection) error {
 	defer file.Close()
 
 	c.ID = uuid.NewString()
-	data, err := json.MarshalIndent(c, "", " ")
+	data, err := json.MarshalIndent(c, "", "    ")
 	if err != nil {
 		return err
 	}
