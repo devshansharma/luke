@@ -8,7 +8,20 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// Request
+type Request struct {
+	ID          string   `json:"id"`
+	Name        string   `json:"name" validate:"required"`
+	Description string   `json:"description" validate:"omitempty"`
+	URL         string   `json:"url" validate:"required,url"`
+	Method      string   `json:"method" validate:"oneof=GET POST PUT PATCH DELETE"`
+	Headers     []string `json:"headers" validate:"omitempty"`
+	DataType    string   `json:"data_type" validate:"omitempty"`
+	Data        string   `json:"data" validate:"omitempty"`
+	PreScript   string   `json:"pre_script" validate:"omitempty"`
+	PostScript  string   `json:"post_script" validate:"omitempty"`
+}
+
+// RequestConfig to be used when we use it as a curl alternative
 type RequestConfig struct {
 	URL string `validate:"required,url"`
 

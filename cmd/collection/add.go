@@ -28,13 +28,13 @@ to quickly create a Cobra application.`,
 		writer := parseGlobalFlags(cmd, args)
 		defer writer.Close()
 
-		cfg := collection.Config{
+		c := collection.Collection{
 			Name: name,
 		}
 
-		cfg.Description, _ = cmd.Flags().GetString("description")
+		c.Description, _ = cmd.Flags().GetString("description")
 
-		err := collection.Handler(cfg)
+		err := collection.AddHandler(c)
 		if err != nil {
 			writer.Error(err.Error())
 			os.Exit(1)

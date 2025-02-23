@@ -34,7 +34,7 @@ to quickly create a Cobra application.`,
 
 		cfg.Description, _ = cmd.Flags().GetString("description")
 
-		err := env.Handler(cfg)
+		err := env.AddHandler(cfg)
 		if err != nil {
 			writer.Error(err.Error())
 			os.Exit(1)

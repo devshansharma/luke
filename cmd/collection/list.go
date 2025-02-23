@@ -4,10 +4,9 @@ Copyright © 2025 Shantanu Sharma sharmashan0805@gmail.com
 package collection
 
 import (
-	"fmt"
 	"os"
-	"strings"
 
+	"github.com/devshansharma/luke/internal/collection"
 	"github.com/spf13/cobra"
 )
 
@@ -23,25 +22,12 @@ This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		writer := parseGlobalFlags(cmd, args)
+		defer writer.Close()
 
-		homeDir, err := os.UserHomeDir()
+		err := collection.ListHandler()
 		if err != nil {
 			writer.Error(err.Error())
 			os.Exit(1)
-		}
-		dirPath := fmt.Sprintf("%s/.luke", homeDir)
-
-		dirEntry, err := os.ReadDir(dirPath)
-		if err != nil {
-			writer.Error(err.Error())
-			os.Exit(1)
-		}
-
-		for _, entry := range dirEntry {
-			if strings.HasSuffix(entry.Name(), "_collection.json") {
-				name := strings.TrimSuffix(entry.Name(), "_collection.json")
-				writer.Response(strings.ReplaceAll(name, "_", " "))
-			}
 		}
 	},
 }
