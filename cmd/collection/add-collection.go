@@ -13,20 +13,24 @@ import (
 )
 
 // listCmd represents the list command
-var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+var addCmd = &cobra.Command{
+	Use:   "add",
+	Short: "To add a collection",
+	Args:  cobra.ExactArgs(1),
+	Long: `To add a collection
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+luke collection add <collection_name>
+
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		err := cmd.ParseFlags(args)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(1)
+		}
+
+		cfg := handlers.AddCollectionConfig{
+			Name: args[0],
 		}
 
 		err = utils.ValidateFlags(cmd, args)
@@ -35,7 +39,7 @@ to quickly create a Cobra application.`,
 			os.Exit(1)
 		}
 
-		err = handlers.ListCollection()
+		err = handlers.AddCollection(&cfg)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(1)
@@ -44,7 +48,7 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	CollectionCmd.AddCommand(listCmd)
+	CollectionCmd.AddCommand(addCmd)
 
 	// Here you will define your flags and configuration settings.
 

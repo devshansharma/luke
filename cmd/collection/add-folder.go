@@ -12,21 +12,27 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// listCmd represents the list command
-var listCmd = &cobra.Command{
-	Use:   "list",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+// addFolderCmd represents the list command
+var addFolderCmd = &cobra.Command{
+	Use:               "add-folder",
+	Short:             "To add folder",
+	Args:              cobra.ExactArgs(2),
+	ValidArgsFunction: handlers.AddFolderCompletion,
+	Long: `To add a folder
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+luke collection add-folder <collection_name> <folder_name>	
+
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		err := cmd.ParseFlags(args)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(1)
+		}
+
+		cfg := handlers.AddFolderConfig{
+			CollectionName: args[0],
+			FolderName:     args[1],
 		}
 
 		err = utils.ValidateFlags(cmd, args)
@@ -35,7 +41,7 @@ to quickly create a Cobra application.`,
 			os.Exit(1)
 		}
 
-		err = handlers.ListCollection()
+		err = handlers.AddFolder(&cfg)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(1)
@@ -44,7 +50,7 @@ to quickly create a Cobra application.`,
 }
 
 func init() {
-	CollectionCmd.AddCommand(listCmd)
+	CollectionCmd.AddCommand(addFolderCmd)
 
 	// Here you will define your flags and configuration settings.
 

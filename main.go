@@ -1,5 +1,5 @@
 /*
-Copyright © 2025 Shantanu Sharma sharmashan0805@gmail.com
+Copyright © 2025 NAME HERE <EMAIL ADDRESS>
 */
 package main
 

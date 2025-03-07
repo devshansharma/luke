@@ -1,14 +1,9 @@
 
-install:
+
+completion:
 	go install
+	luke completion bash | sudo tee /etc/bash_completion.d/luke > /dev/null
+# source /etc/bash_completion.d/luke
 
-get:
-	luke request https://jsonplaceholder.typicode.com/posts/1
-
-post:
-	luke request -X POST https://jsonplaceholder.typicode.com/posts -d '{}'
-
-debug:
-	go build -gcflags "all=-N -l" -o luke-debug
-	dlv exec ./luke-debug -- request -X POST "https://jsonplaceholder.typicode.com/posts" -d '{}' -s
-
+name:
+	find cmd -name "*.go" -print | xargs sed -i 's/RootCmd/rootCmd/g'
