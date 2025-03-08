@@ -1,14 +1,9 @@
 package handlers
 
 import (
-	"encoding/json"
-	"errors"
 	"fmt"
 	"os"
 	"strings"
-
-	"github.com/devshansharma/luke/internal/models"
-	"github.com/devshansharma/luke/pkg/utils"
 )
 
 type CollectionDetailsConfig struct {
@@ -18,26 +13,9 @@ type CollectionDetailsConfig struct {
 
 // CollectionDetails to list collection items and folders
 func CollectionDetails(cfg *CollectionDetailsConfig) error {
-	dir, err := utils.GetConfigDir()
+	obj, _, err := getCollection(cfg.Name)
 	if err != nil {
 		return err
-	}
-
-	collectionFileName := fmt.Sprintf("%s/%s", dir, getCollectionFileName(cfg.Name))
-	_, err = os.Stat(collectionFileName)
-	if err != nil && errors.Is(err, os.ErrNotExist) {
-		return fmt.Errorf("collection does not exist")
-	}
-
-	data, err := os.ReadFile(collectionFileName)
-	if err != nil {
-		return fmt.Errorf("failed to get collection: %s", err.Error())
-	}
-
-	obj := models.Collection{}
-	err = json.Unmarshal(data, &obj)
-	if err != nil {
-		return fmt.Errorf("failed to parse collection: %s", err.Error())
 	}
 
 	fmt.Fprintf(os.Stdout, "Collection: %s\n", obj.Info.Name)
@@ -52,10 +30,8 @@ func CollectionDetails(cfg *CollectionDetailsConfig) error {
 		}
 	}
 
-	if cfg.FolderName == "" {
-		for _, item := range obj.Items {
-			fmt.Fprintf(os.Stdout, "- %s\n", item.Name)
-		}
+	for _, item := range obj.Items {
+		fmt.Fprintf(os.Stdout, "- %s\n", item.Name)
 	}
 
 	return nil

@@ -1,9 +1,14 @@
 package handlers
 
 import (
+	"encoding/json"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
+
+	"github.com/devshansharma/luke/internal/models"
+	"github.com/devshansharma/luke/pkg/utils"
 )
 
 type FileSuffix string
@@ -52,4 +57,48 @@ func getCollectionFileName(name string) string {
 func getEnvFileName(name string) string {
 	name = strings.ReplaceAll(name, " ", "_")
 	return fmt.Sprintf("%s%s", name, environmentSuffix)
+}
+
+func writeToFile(obj models.Collection, fileName string) error {
+	data, err := json.MarshalIndent(obj, "", "  ")
+	if err != nil {
+		return err
+	}
+
+	fileData := string(data) + "\n"
+	err = os.WriteFile(fileName, []byte(fileData), os.ModePerm)
+	if err != nil {
+		return fmt.Errorf("failed to write to file: %s", err)
+	}
+
+	return nil
+}
+
+func getCollection(name string) (obj models.Collection, fileName string, err error) {
+	dir, err := utils.GetConfigDir()
+	if err != nil {
+		return
+	}
+
+	fileName = fmt.Sprintf("%s/%s", dir, getCollectionFileName(name))
+
+	_, err = os.Stat(fileName)
+	if err != nil && errors.Is(err, os.ErrNotExist) {
+		err = fmt.Errorf("collection does not exist")
+		return
+	}
+
+	data, err := os.ReadFile(fileName)
+	if err != nil {
+		err = fmt.Errorf("failed to get collection: %s", err.Error())
+		return
+	}
+
+	err = json.Unmarshal(data, &obj)
+	if err != nil {
+		err = fmt.Errorf("failed to parse collection: %s", err.Error())
+		return
+	}
+
+	return
 }

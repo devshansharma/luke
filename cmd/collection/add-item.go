@@ -33,7 +33,7 @@ luke collection add-item <collection_name> --folder <folder_name> --name <item_n
 		}
 
 		cfg := handlers.AddItemConfig{
-			CollectionName: args[0],
+			Name: args[0],
 		}
 
 		err = utils.ValidateFlags(cmd, args)

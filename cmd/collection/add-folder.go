@@ -31,8 +31,8 @@ luke collection add-folder <collection_name> <folder_name>
 		}
 
 		cfg := handlers.AddFolderConfig{
-			CollectionName: args[0],
-			FolderName:     args[1],
+			Name:       args[0],
+			FolderName: args[1],
 		}
 
 		err = utils.ValidateFlags(cmd, args)
