@@ -49,9 +49,9 @@ func AddFolder(cfg *AddFolderConfig) error {
 	}
 
 	obj.Folders = append(obj.Folders, models.Folder{
-		ID:   uuid.NewString(),
-		Name: cfg.FolderName,
-		Item: make([]models.Item, 0),
+		ID:    uuid.NewString(),
+		Name:  cfg.FolderName,
+		Items: make([]models.Item, 0),
 	})
 
 	data, err = json.MarshalIndent(obj, "", "  ")

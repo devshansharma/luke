@@ -34,4 +34,5 @@ type Item struct {
 	Events  []Event  `json:"events,omitempty"`
 	Request Request  `json:"request,omitempty"`
 	Reponse []string `json:"response,omitempty"`
+	IsValid bool     `json:"is_valid"`
 }

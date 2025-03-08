@@ -12,17 +12,18 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// CollectionCmd represents the collection command
-var CollectionCmd = &cobra.Command{
-	Use:               "collection",
-	Short:             "To see list of folders and items in a collection",
+// addItemCmd represents the list command
+var addItemCmd = &cobra.Command{
+	Use:               "add-item",
+	Short:             "To add item to a collection or a folder",
 	Args:              cobra.ExactArgs(1),
 	ValidArgsFunction: handlers.AddFolderCompletion,
-	Long: `To see list of folders and items
-luke collection <collection-name>
+	Long: `To add a folder
 
-To see list of items inside a folder:
-luke collection <collection-name> --folder <folder-name>
+luke collection add-item <collection_name> --name <item_name>
+
+luke collection add-item <collection_name> --folder <folder_name> --name <item_name>
+
 `,
 	Run: func(cmd *cobra.Command, args []string) {
 		err := cmd.ParseFlags(args)
@@ -31,12 +32,9 @@ luke collection <collection-name> --folder <folder-name>
 			os.Exit(1)
 		}
 
-		cfg := handlers.CollectionDetailsConfig{
-			Name: args[0],
+		cfg := handlers.AddItemConfig{
+			CollectionName: args[0],
 		}
-
-		folder, _ := cmd.Flags().GetString("folder")
-		cfg.FolderName = folder
 
 		err = utils.ValidateFlags(cmd, args)
 		if err != nil {
@@ -44,7 +42,13 @@ luke collection <collection-name> --folder <folder-name>
 			os.Exit(1)
 		}
 
-		err = handlers.CollectionDetails(&cfg)
+		folder, _ := cmd.Flags().GetString("folder")
+		name, _ := cmd.Flags().GetString("name")
+
+		cfg.FolderName = folder
+		cfg.ItemName = name
+
+		err = handlers.AddItem(&cfg)
 		if err != nil {
 			fmt.Fprintln(os.Stderr, err.Error())
 			os.Exit(1)
@@ -53,14 +57,16 @@ luke collection <collection-name> --folder <folder-name>
 }
 
 func init() {
+	CollectionCmd.AddCommand(addItemCmd)
+
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// collection/collectionCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// listCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// collection/collectionCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-	CollectionCmd.Flags().StringP("folder", "f", "", "list items in a folder")
+	addItemCmd.Flags().StringP("name", "n", "", "item name")
+	addItemCmd.Flags().StringP("folder", "f", "", "folder name")
 }

@@ -19,8 +19,16 @@ func ListCollection() error {
 		return err
 	}
 
-	for index, entry := range filterCollection(dirEntries) {
-		fmt.Fprintf(os.Stdout, "%02d %s\n", index+1, getCollectionName(entry))
+	if len(filterCollection(dirEntries)) > 0 {
+		fmt.Fprintln(os.Stdout, "Collections found:")
+	}
+
+	if len(filterCollection(dirEntries)) == 0 {
+		fmt.Fprintln(os.Stderr, "No Collections found")
+	}
+
+	for _, entry := range filterCollection(dirEntries) {
+		fmt.Fprintf(os.Stdout, "- %s\n", getCollectionName(entry))
 	}
 
 	return nil
@@ -38,8 +46,16 @@ func ListEnvironment() error {
 		return err
 	}
 
-	for index, entry := range filterEnvironment(dirEntries) {
-		fmt.Fprintf(os.Stdout, "%02d %s\n", index+1, getEnvName(entry))
+	if len(filterEnvironment(dirEntries)) > 0 {
+		fmt.Fprintln(os.Stdout, "Environments found:")
+	}
+
+	if len(filterEnvironment(dirEntries)) == 0 {
+		fmt.Fprintln(os.Stderr, "No Environments found")
+	}
+
+	for _, entry := range filterEnvironment(dirEntries) {
+		fmt.Fprintf(os.Stdout, "- %s\n", getEnvName(entry))
 	}
 
 	return nil
